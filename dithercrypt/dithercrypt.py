@@ -44,11 +44,17 @@ def steg2(clear1, clear2, secret):
     out1 = np.zeros(shape, dtype=np.uint8)
     out2 = np.zeros(shape, dtype=np.uint8)
 
+    # Scale the images into range
+    contrast = 0.25
+    secret = secret * contrast
+    clear1 = clear1 * (0.5 - contrast) + contrast
+    clear2 = clear2 * (0.5 - contrast) + contrast
+
     for i in range(shape[0]):
         for j in range(shape[1]):
-            x = secret[i,j] * 0.25
-            a = clear1[i,j] * 0.25 + 0.25
-            b = clear2[i,j] * 0.25 + 0.25
+            x = secret[i,j]
+            a = clear1[i,j]
+            b = clear2[i,j]
             p11 = x
             p01 = b-x
             p10 = a-x
@@ -67,6 +73,16 @@ def steg2(clear1, clear2, secret):
 
             out1[i,j] = o1 * 255
             out2[i,j] = o2 * 255
+
+            # Propagate the errors using the Floyd-Steinberg kernel
+            #def prop(mat, di, dj, err):
+            #    if i+di < mat.shape[0] and 0 <= j+dj < mat.shape[1]:
+            #        mat[i+di][j+dj] += 0.25*err
+
+            #prop(clear1, 0,  1, (a-o1) * (7/16))
+            #prop(clear1, 1, -1, (a-o1) * (3/16))
+            #prop(clear1, 1,  0, (a-o1) * (5/16))
+            #prop(clear1, 1,  1, (a-o1) * (1/16))
 
     return (out1, out2)
 
