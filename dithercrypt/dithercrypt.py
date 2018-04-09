@@ -3,6 +3,7 @@
 import secrets
 import PIL.Image
 import numpy as np
+import sys
 
 def randfloat():
     return secrets.randbits(32) / (1<<32)
@@ -141,26 +142,31 @@ def encrypt3(img_ab, img_ac, img_bc):
 
     return (out_a, out_b, out_c)
 
+commands = [
+    ('encrypt2', 2, 2, encrypt2),
+    ('steg2', 3, 2, steg2),
+    ('encrypt3', 3, 3, encrypt3),
+]
+
 def main(cmd, *args):
-    if cmd == 'make_cut_mask':
-        arr = load_img(args[0])
-        (left,right) = basic_expand(arr)
-        make_cut_mask(left, '%s_positive.svg' % args[1])
-        make_cut_mask(right, '%s_negative.svg' % args[1])
-        return 0
-    elif cmd == 'make_png_mask':
-        arr = load_img(args[0])
-        (left,right) = basic_expand(arr)
-        PIL.Image.fromarray(left*255).save('%s_positive.png' % args[1])
-        PIL.Image.fromarray(right*255).save('%s_negative.png' % args[1])
-        return 0
-    elif cmd == 'make_mask':
-        make_mask(int(args[0]), int(args[1]), args[2])
-        return 0
+    for c, in_arity, out_arity, func in commands:
+        if cmd == c:
+            break
     else:
-        print('Bad command %s' % cmd)
+        print('Usage: %s [%s] ...' % (sys.argv[0], '|'.join([c for c, _, _, _ in commands])))
         return 1
 
+    if len(args) != in_arity + out_arity:
+        print('Usage: %s %s (%d input images) (%d output images)' % (sys.argv[0], cmd, in_arity, out_arity))
+        return 1
+
+    in_imgs = [load_img(filename) for filename in args[0:in_arity]]
+    out_imgs = func(*in_imgs)
+
+    for img, name in zip(out_imgs, args[in_arity:]):
+        save_img(img, name)
+
 if __name__ == '__main__':
-    import sys
+    if len(sys.argv) < 2:
+        sys.exit(main(None))
     sys.exit(main(*sys.argv[1:]))
