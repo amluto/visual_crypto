@@ -142,10 +142,60 @@ def encrypt3(img_ab, img_ac, img_bc):
 
     return (out_a, out_b, out_c)
 
+def encrypt4(img_ab, img_ac, img_ad, img_bc, img_bd, img_cd):
+    shape = img_ab.shape
+    if shape != img_ac.shape or shape != img_ad.shape or shape != img_bc.shape or shape != img_bd.shape or shape != img_cd.shape:
+        raise TypeError('all six images must have the same shape')
+
+    out_a = np.zeros(shape, dtype=np.uint8)
+    out_b = np.zeros(shape, dtype=np.uint8)
+    out_c = np.zeros(shape, dtype=np.uint8)
+    out_d = np.zeros(shape, dtype=np.uint8)
+
+    # Scale the images into range
+    contrast = 1/12
+    img_ab = img_ab * contrast
+    img_ac = img_ac * contrast
+    img_ad = img_ad * contrast
+    img_bc = img_bc * contrast
+    img_bd = img_bd * contrast
+    img_cd = img_cd * contrast
+
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+            ab = img_ab[i,j]
+            ac = img_ac[i,j]
+            ad = img_ad[i,j]
+            bc = img_bc[i,j]
+            bd = img_bd[i,j]
+            cd = img_cd[i,j]
+
+            o1, o2, o3, o4 = draw([
+                (ab + ac + ad + bc + bd + cd, (0,0,0,0)),
+                (ab, (1,1,0,0)),
+                (ac, (1,0,1,0)),
+                (ad, (1,0,0,1)),
+                (bc, (0,1,1,0)),
+                (bd, (0,1,0,1)),
+                (cd, (0,0,1,1)),
+                (1/4 - ab - ac - ad, (1,0,0,0)),
+                (1/4 - ab - bc - bd, (0,1,0,0)),
+                (1/4 - ac - bc - cd, (0,0,1,0)),
+                (1/4 - ad - bd - cd, (0,0,0,1)),
+            ])
+
+            out_a[i,j] = o1 * 255
+            out_b[i,j] = o2 * 255
+            out_c[i,j] = o3 * 255
+            out_d[i,j] = o4 * 255
+
+    return (out_a, out_b, out_c, out_d)
+
 commands = [
     ('encrypt2', 2, 2, encrypt2),
     ('steg2', 3, 2, steg2),
     ('encrypt3', 3, 3, encrypt3),
+    ('encrypt4', 6, 4, encrypt4),
 ]
 
 def main(cmd, *args):
