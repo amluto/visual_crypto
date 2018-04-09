@@ -86,6 +86,61 @@ def steg2(clear1, clear2, secret):
 
     return (out1, out2)
 
+def draw(dist):
+    total_p = 0.0
+    for prob, _ in dist:
+        assert prob > -0.0001 and prob < 1.0001
+        total_p += prob
+    assert total_p > -0.0001 and total_p < 1.0001
+
+    r = randfloat()
+
+    for prob, outcome in dist:
+        if r < prob:
+            return outcome
+        r -= prob
+
+    # Fallback in case of rounding error
+    return dist[-1][1]
+
+def encrypt3(img_ab, img_ac, img_bc):
+    shape = img_ab.shape
+    if shape != img_ac.shape or shape != img_bc.shape:
+        raise TypeError('all three images must have the same shape')
+
+    out_a = np.zeros(shape, dtype=np.uint8)
+    out_b = np.zeros(shape, dtype=np.uint8)
+    out_c = np.zeros(shape, dtype=np.uint8)
+
+    # Scale the images into range
+    contrast = 1/6
+    img_ab = img_ab * contrast
+    img_ac = img_ac * contrast
+    img_bc = img_bc * contrast
+
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+            ab = img_ab[i,j]
+            ac = img_ac[i,j]
+            bc = img_bc[i,j]
+
+            o1, o2, o3 = draw([
+                (0, (1,1,1)),
+                (ab + ac + bc, (0,0,0)),
+                (bc, (0,1,1)),
+                (ac, (1,0,1)),
+                (ab, (1,1,0)),
+                (1/3 - ab - ac, (1,0,0)),
+                (1/3 - ab - bc, (0,1,0)),
+                (1/3 - ac - bc, (0,0,1))
+            ])
+
+            out_a[i,j] = o1 * 255
+            out_b[i,j] = o2 * 255
+            out_c[i,j] = o3 * 255
+
+    return (out_a, out_b, out_c)
+
 def main(cmd, *args):
     if cmd == 'make_cut_mask':
         arr = load_img(args[0])
