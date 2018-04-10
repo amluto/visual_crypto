@@ -4,7 +4,7 @@ Dithercrypt is an approach to visual cryptography that works by jointly
 dithering several images so that the images are revealed when the
 output is printed on transparency film and overlaid.  The
 [dithercrypt program](dithercrypt/dithercrypt.py) supports
-three variants:
+four variants:
 
 * "encrypt2" encrypts a single image into two output grids.  Taken
   individually, the grids are random noise.  If overlaid, the image is
