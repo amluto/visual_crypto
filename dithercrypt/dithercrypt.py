@@ -20,7 +20,7 @@ def save_img(img, fn):
 
 def encrypt2(img):
     shape = img.shape
-    
+
     out1 = np.zeros(shape, dtype=np.uint8)
     out2 = np.zeros(shape, dtype=np.uint8)
 
@@ -41,7 +41,7 @@ def steg2(clear1, clear2, secret):
     shape = clear1.shape
     if shape != clear2.shape or shape != secret.shape:
         raise TypeError('all three images must have the same shape')
-    
+
     out1 = np.zeros(shape, dtype=np.uint8)
     out2 = np.zeros(shape, dtype=np.uint8)
 
@@ -192,7 +192,7 @@ def encrypt4(img_ab, img_ac, img_ad, img_bc, img_bd, img_cd):
     return (out_a, out_b, out_c, out_d)
 
 commands = [
-    ('encrypt2', 2, 2, encrypt2),
+    ('encrypt2', 1, 2, encrypt2),
     ('steg2', 3, 2, steg2),
     ('encrypt3', 3, 3, encrypt3),
     ('encrypt4', 6, 4, encrypt4),
