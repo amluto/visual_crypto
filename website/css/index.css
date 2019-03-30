@@ -1,0 +1,43 @@
+body {
+	font-size: 11pt;
+	margin: 3em;
+	background: #fff;
+	color: #444;
+	max-width: 100%;
+    font-family: monospace;
+}
+
+h1 {
+	text-transform: uppercase;
+    font-size: 1em;
+}
+
+h2 {
+	font-size: 1em;
+	text-transform: uppercase;
+    margin-top: 1em;
+}
+
+section a {
+	color: #444;
+	display: block;
+	margin: 0;
+}
+
+a:hover {
+	color: #268bd2;
+}
+
+.postdate {
+	color: #CCC;
+}
+
+@media (max-width: 1080px) {
+	body {
+		margin: 3em;
+		font-size: 20pt;
+	}
+	a {
+		margin-top: 0.25em;
+	}
+}
