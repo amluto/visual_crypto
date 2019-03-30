@@ -37,6 +37,11 @@ gamma.
 To print the results, you'll need to use a program that will give
 pixelated output instead of trying to interpolate.
 
+Example usage:
+```
+python /path/to/dithercrypt.py encrypt2 /path/to/inputimage.jpg output1.jpg output2.jpg
+```
+
 # Visual cryptography workshop
 
 This is a placeholder.  It's very awkward to use right now.
