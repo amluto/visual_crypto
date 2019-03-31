@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/bsimsekc/public_html/visual-cryptography
-    - /bin/cp -R * $DEPLOYPATH
