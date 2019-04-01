@@ -6,13 +6,13 @@ output is printed on transparency film and overlaid.  The
 [dithercrypt program](dithercrypt/dithercrypt.py) supports
 four variants:
 
-* "encrypt2" encrypts a single image into two output grids.  Taken
+* "encrypt2" encrypts single image into two output grids.  Taken
   individually, the grids are random noise.  If overlaid, the image is
   revealed.  Black areas of the secret image will appear entirely black;
   white areas will be half black and half white; and gray areas will
   be more than half black and less than half white.
 
-* "encrypt3" encrypts a three images into three output grids.  Taken
+* "encrypt3" encrypts three images into three output grids.  Taken
   individually, the grids are random noise.  If two grids are
   overlaid, one of the three input images will be revealed.  Black
   areas of the secret image will appear entirely black; white areas
@@ -36,6 +36,11 @@ gamma.
 
 To print the results, you'll need to use a program that will give
 pixelated output instead of trying to interpolate.
+
+Example usage:
+```
+python /path/to/dithercrypt.py encrypt2 /path/to/inputimage.jpg output1.jpg output2.jpg
+```
 
 # Visual cryptography workshop
 
